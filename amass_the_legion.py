@@ -1,28 +1,41 @@
-import sys
+#!/usr/bin/env python3
+
+import argparse
 import subprocess as SP
 
+output_file = 'enum_result.txt'
+
+
 def main():
-    target = sys.argv[1]
-    token = sys.argv[2]
-    name = sys.argv[3]
+    parser = argparse.ArgumentParser(
+        description='Enumerating hosts and domains via OWASP AMASS')
+    parser.add_argument('-t', '--target')
+    parser.add_argument('--token')
+    parser.add_argument('-n', '--name')
+    args = parser.parse_args()
 
-    amass_command = ["amass", "enum", "-active", "-d", target, "-p", "80,443,8080"]
-    nexploit_cli_command = ["nexploit-cli", "scan:run", "--token", token, "--name", f'"amass_scan_{name}"', "--crawler", target, "--smart", "--host-filter"]
+    target = args.target
+    token = args.token
+    name = args.name
 
-    _file = open("enum_result.txt", "w+")
-    SP.call(amass_command, stdout=_file)
-    _file.close()
+    amass_command = ["amass", "enum", "-active",
+                     "-d", target, "-p", "80,443,8080"]
+    nexploit_cli_command = ["nexploit-cli", "scan:run", "--token", token,
+                            "--name", f'amass_scan_{name}', "--crawler", target,
+                            "--smart", "--host-filter"]
 
-    f = open("enum_result.txt", "r")
-    host_list = []
-    for host in f:
-        host_list.append(host.strip('\n'))
+    with open(output_file, "w+") as f:
+        SP.call(amass_command, stdout=f)
 
-    nexploit_cli_command.append(host_list) 
-    f.close()
+    with open(output_file, "r") as f:
+        host_list = [host.strip('\n') for host in f]
+        nexploit_cli_command.append(host_list)
+
     try:
         SP.call(nexploit_cli_command)
     except:
         print("Error when trying to call nexploit_cli")
+
+
 if __name__ == "__main__":
     main()
