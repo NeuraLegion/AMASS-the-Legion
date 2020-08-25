@@ -1,7 +1,5 @@
 import sys
 import subprocess as SP
-import uuid
-    # DEAISAWESOME PRINT READ COMMIT
 
 def main():
     target = sys.argv[1]
@@ -19,9 +17,9 @@ def main():
     host_list = []
     for host in f:
         host_list.append(host.strip('\n'))
+
     nexploit_cli_command.append(host_list) 
     f.close()
-    print(*nexploit_cli_command)
     try:
         SP.call(nexploit_cli_command)
     except:
