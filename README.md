@@ -15,8 +15,8 @@ Script used for enumerating hosts and domains via OWASP AMASS, than starting a s
 ## Usage
 Once all of the prerequisite are ready and installed, it's as easy as running:
 
-`python amass_the_legion.py TARGET API-TOKEN SCAN-NAME`
+`python amass_the_legion.py -t TARGET --token API-TOKEN -n SCAN-NAME`
 
 example: 
 
-`python amass_the_legion.py example.com 0r2prxw.nexa.qyn9gffrgnbbl6plwl3j2fm7jrf2nu4g example.com-scan-amass`
+`python amass_the_legion.py -t example.com --token 0r2prxw.nexa.qyn9gffrgnbbl6plwl3j2fm7jrf2nu4g -n example.com-scan-amass`

@@ -21,16 +21,20 @@ def main():
     amass_command = ["amass", "enum", "-active",
                      "-d", target, "-p", "80,443,8080"]
     nexploit_cli_command = ["nexploit-cli", "scan:run", "--token", token,
-                            "--name", f'amass_scan_{name}', "--crawler", target,
-                            "--smart", "--host-filter"]
+                            "--name", f'"amass_scan_{name}"', "--crawler", f'"http://{target}"'
+                           ]
 
     with open(output_file, "w+") as f:
         SP.call(amass_command, stdout=f)
 
     with open(output_file, "r") as f:
-        host_list = [host.strip('\n') for host in f]
-        nexploit_cli_command.append(host_list)
-
+        for host in f:
+            stripped = host.strip('\n')
+            host = f'"{stripped}"'
+            nexploit_cli_command.append("--host-filter")
+            nexploit_cli_command.append(host)
+    print(*nexploit_cli_command)
+    nexploit_cli_command.append("--smart")
     try:
         SP.call(nexploit_cli_command)
     except:
